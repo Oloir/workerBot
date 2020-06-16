@@ -1,33 +1,76 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.sql.*;
 import java.util.Scanner;
 
 
-public class Quote  {
-    ArrayList<String> List1 = new ArrayList<String>();
+public class Quote {
+
     Scanner Scan;
 
-    public String getQuote() {
+    public String getQuote() throws SQLException {
 
-        {
-            try {
-                Scan = new Scanner(new File("Library"));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+
+        Connection conn;
+        Statement statmt;
+        ResultSet resSet;
+
+        conn = null;
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        {
-            while (Scan.hasNextLine()) {
-                List1.add(Scan.nextLine());
-            }
-            String[] array = List1.toArray(new String[0]);
-
-            double z = Math.random() * List1.size();
-            int x = (int) Math.round(z);
-            System.out.println(z);
-
-            return (List1.get(x));
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:quotes");
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        try {
+            statmt = conn.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        Statement statement = conn.createStatement();{
+            ResultSet resultSet = statement.executeQuery("SELECT text FROM quotes ORDER BY RANDOM() LIMIT 1;");
+            System.out.println(resultSet.getString(1));
+            return resultSet.getString(1);
+        }
+
+
+
+
+
+
+
+
     }
 }
+
+
+
+
+
+
+
+//        {
+//            try {
+//                Scan = new Scanner(new File("Library"));
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        {
+//            while (Scan.hasNextLine()) {
+//                List1.add(Scan.nextLine());
+//            }
+//            String[] array = List1.toArray(new String[0]);
+//
+//            double z = Math.random() * List1.size();
+//            int x = (int) Math.round(z);
+//            System.out.println(z);
+//
+//            return (List1.get(x));
+//        }
+//  }
+//}
